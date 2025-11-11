@@ -13,6 +13,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'all' | 'cubicle' | 'scs'>('all');
   const [activeSubCategory, setActiveSubCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCity, setSelectedCity] = useState<string>('');
 
   const handleQuantityChange = (variantId: number, quantity: number) => {
     setCart(prev => ({
@@ -228,13 +229,17 @@ export default function Home() {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <CartSummary items={cartItems} />
+            <CartSummary items={cartItems} selectedCity={selectedCity} />
           </div>
         </div>
 
         {/* Pre-order Form */}
         <div className="mt-12">
-          <PreOrderForm items={cartItems} onSubmit={handlePreOrderSubmit} />
+          <PreOrderForm
+            items={cartItems}
+            onSubmit={handlePreOrderSubmit}
+            onCityChange={setSelectedCity}
+          />
         </div>
       </main>
 

@@ -6,9 +6,10 @@ import { CartItem, PreOrderFormData } from '@/lib/types';
 interface PreOrderFormProps {
   items: CartItem[];
   onSubmit: (formData: PreOrderFormData) => void;
+  onCityChange?: (city: string) => void;
 }
 
-export default function PreOrderForm({ items, onSubmit }: PreOrderFormProps) {
+export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrderFormProps) {
   const [formData, setFormData] = useState<PreOrderFormData>({
     fullName: '',
     email: '',
@@ -24,10 +25,16 @@ export default function PreOrderForm({ items, onSubmit }: PreOrderFormProps) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Notify parent when city changes
+    if (name === 'city' && onCityChange) {
+      onCityChange(value);
+    }
   };
 
   const vietnameseCities = [
@@ -161,6 +168,77 @@ export default function PreOrderForm({ items, onSubmit }: PreOrderFormProps) {
             className="w-full px-5 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white resize-none transition-all"
             placeholder="Yêu cầu đặc biệt hoặc ghi chú thêm..."
           />
+        </div>
+
+        {/* Payment Instructions */}
+        <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded-r-xl p-5 space-y-4">
+          <h3 className="font-bold text-blue-900 dark:text-blue-200 text-lg">
+            💳 Hướng Dẫn Thanh Toán
+          </h3>
+          <div className="space-y-2 text-sm text-blue-800 dark:text-blue-300">
+            <p>
+              <span className="font-semibold">Bước 1:</span> Đặt hàng và nhận thông tin xác nhận
+            </p>
+            <p>
+              <span className="font-semibold">Bước 2:</span> Quét mã QR hoặc chuyển khoản theo thông tin bên dưới
+            </p>
+            <p className="pl-6 text-xs italic">
+              ⚠️ <strong>LƯU Ý:</strong> Vui lòng ghi <strong>Họ Tên + Số Điện Thoại</strong> vào nội dung chuyển khoản
+            </p>
+            <p>
+              <span className="font-semibold">Bước 3:</span> Chúng tôi sẽ xử lý và giao hàng sau khi nhận được thanh toán
+            </p>
+          </div>
+
+          {/* QR Code */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 flex flex-col items-center space-y-3">
+            <img
+              src="/payment-qr.jpeg"
+              alt="QR Code thanh toán"
+              className="w-48 h-48 object-contain rounded-lg border-2 border-blue-200 dark:border-blue-700"
+            />
+            <p className="text-xs text-center text-blue-900 dark:text-blue-200 font-medium">
+              Quét mã QR để chuyển khoản
+            </p>
+
+            {/* Bank Details */}
+            <div className="w-full border-t-2 border-gray-200 dark:border-gray-700 pt-3 space-y-2">
+              <p className="text-xs font-bold text-center text-gray-700 dark:text-gray-300 mb-2">
+                Hoặc chuyển khoản thủ công:
+              </p>
+              <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-md space-y-1.5 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Ngân hàng:</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-100">Vietcombank HCM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Số tài khoản:</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-100 font-mono">0421000408696</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Chủ tài khoản:</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-100">DO CONG TOAN</span>
+                </div>
+                <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-gray-600 dark:text-gray-400">Nội dung:</p>
+                  <p className="font-bold text-blue-600 dark:text-blue-400 mt-1">
+                    {formData.fullName && formData.phone
+                      ? `${formData.fullName} ${formData.phone}`
+                      : '[Họ Tên] [Số ĐT]'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-blue-200 dark:border-blue-800">
+            <p className="text-xs text-blue-700 dark:text-blue-400">
+              <span className="font-semibold">📦 Phí vận chuyển:</span>
+              {formData.city === 'Hồ Chí Minh' ? ' 35,000 ₫ (HCM)' :
+               formData.city ? ' 40,000 ₫ (Tỉnh khác)' :
+               ' 35,000 ₫ (HCM) / 40,000 ₫ (Tỉnh khác)'}
+            </p>
+          </div>
         </div>
 
         <button

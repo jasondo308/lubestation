@@ -4,10 +4,24 @@ import { CartItem } from '@/lib/types';
 
 interface CartSummaryProps {
   items: CartItem[];
+  selectedCity?: string;
 }
 
-export default function CartSummary({ items }: CartSummaryProps) {
+export default function CartSummary({ items, selectedCity }: CartSummaryProps) {
   const subtotal = items.reduce((sum, item) => sum + (item.variant.price * item.quantity), 0);
+
+  // 10% pre-order discount
+  const discount = subtotal * 0.1;
+  const afterDiscount = subtotal - discount;
+
+  // Shipping cost based on city
+  const getShippingCost = () => {
+    if (!selectedCity) return 0;
+    return selectedCity === 'Hồ Chí Minh' ? 35000 : 40000;
+  };
+
+  const shippingCost = getShippingCost();
+  const total = afterDiscount + shippingCost;
 
   // Format VND currency with thousand separators
   const formatVND = (amount: number) => {
@@ -37,11 +51,47 @@ export default function CartSummary({ items }: CartSummaryProps) {
         ))}
       </div>
 
-      <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-5">
-        <div className="flex justify-between text-xl font-bold">
+      {/* Pre-order discount banner */}
+      <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+        <p className="text-xs font-bold text-green-800 dark:text-green-200 text-center">
+          🎉 Ưu đãi đặt hàng trước: Giảm 10%
+        </p>
+      </div>
+
+      <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-5 space-y-3">
+        {/* Subtotal */}
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-600 dark:text-gray-400">Tạm tính</span>
+          <span className="text-gray-900 dark:text-white font-medium">
+            {formatVND(subtotal)} ₫
+          </span>
+        </div>
+
+        {/* Discount */}
+        <div className="flex justify-between text-sm">
+          <span className="text-green-600 dark:text-green-400 font-medium">Giảm giá (10%)</span>
+          <span className="text-green-600 dark:text-green-400 font-bold">
+            -{formatVND(discount)} ₫
+          </span>
+        </div>
+
+        {/* Shipping */}
+        {selectedCity && (
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-600 dark:text-gray-400">
+              Phí vận chuyển {selectedCity === 'Hồ Chí Minh' ? '(HCM)' : '(Tỉnh khác)'}
+            </span>
+            <span className="text-gray-900 dark:text-white font-medium">
+              {formatVND(shippingCost)} ₫
+            </span>
+          </div>
+        )}
+
+        {/* Total */}
+        <div className="flex justify-between text-xl font-bold pt-3 border-t border-gray-200 dark:border-gray-700">
           <span className="text-gray-900 dark:text-white">Tổng Cộng</span>
           <span className="text-blue-600 dark:text-blue-400">
-            {formatVND(subtotal)} ₫
+            {formatVND(total)} ₫
           </span>
         </div>
       </div>
