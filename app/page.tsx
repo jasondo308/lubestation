@@ -76,20 +76,61 @@ export default function Home() {
     })
     .filter((item): item is CartItem => item !== null);
 
-  const handlePreOrderSubmit = (formData: PreOrderFormData) => {
-    console.log('Pre-order submitted:', {
-      ...formData,
-      items: cartItems
-    });
+  const handlePreOrderSubmit = async (formData: PreOrderFormData) => {
+    try {
+      // Calculate order totals
+      const subtotal = cartItems.reduce((sum, item) => sum + (item.variant.price * item.quantity), 0);
+      const discount = subtotal * 0.1; // 10% pre-order discount
+      const shipping = formData.city === 'Hồ Chí Minh' ? 35000 : 40000;
+      const total = subtotal - discount + shipping;
 
-    // Show success message
-    setShowSuccess(true);
+      // Prepare order data for API
+      const orderData = {
+        full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        address: formData.address,
+        notes: formData.notes || '',
+        items: cartItems.map(item => ({
+          productName: item.productName,
+          size: item.variant.size,
+          quantity: item.quantity,
+          price: item.variant.price
+        })),
+        subtotal,
+        discount,
+        shipping,
+        total
+      };
 
-    // Reset cart
-    setCart({});
+      // Submit to API
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
 
-    // Hide success message after 5 seconds
-    setTimeout(() => setShowSuccess(false), 5000);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.details || 'Failed to submit order');
+      }
+
+      // Show success message
+      setShowSuccess(true);
+
+      // Reset cart and city
+      setCart({});
+      setSelectedCity('');
+
+      // Hide success message after 5 seconds
+      setTimeout(() => setShowSuccess(false), 5000);
+    } catch (error) {
+      console.error('Order submission error:', error);
+      alert('Đặt hàng thất bại. Vui lòng thử lại sau!');
+    }
   };
 
   return (
