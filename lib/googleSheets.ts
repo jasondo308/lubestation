@@ -31,16 +31,30 @@ export interface OrderData {
 async function getSheetsClient() {
   let auth;
 
-  // Check if running on Vercel with base64-encoded credentials
-  if (process.env.GOOGLE_CREDENTIALS_BASE64) {
-    // Decode base64 credentials (production/Vercel)
-    const credentials = JSON.parse(
-      Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf-8')
-    );
-    auth = new google.auth.GoogleAuth({
-      credentials,
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
+  // Check if running on Vercel with credentials
+  if (process.env.GOOGLE_CREDENTIALS_JSON) {
+    // Use JSON string credentials (production/Vercel)
+    try {
+      const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+      auth = new google.auth.GoogleAuth({
+        credentials,
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      });
+    } catch (parseError) {
+      throw new Error(`Failed to parse credentials: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
+    }
+  } else if (process.env.GOOGLE_CREDENTIALS_BASE64) {
+    // Fallback to base64 if that's what's set
+    try {
+      const decoded = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64.trim(), 'base64').toString('utf-8');
+      const credentials = JSON.parse(decoded);
+      auth = new google.auth.GoogleAuth({
+        credentials,
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      });
+    } catch (decodeError) {
+      throw new Error(`Failed to decode base64 credentials: ${decodeError instanceof Error ? decodeError.message : 'Unknown error'}`);
+    }
   } else {
     // Use local credentials file (development)
     const credentialsPath = path.join(process.cwd(), 'lunar-spring-434604-b3-e05a554cbc11.json');
