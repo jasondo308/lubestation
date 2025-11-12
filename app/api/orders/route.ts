@@ -21,8 +21,18 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error('Server error:', error);
+
+    // Return detailed error info for debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
     return NextResponse.json(
-      { error: 'Failed to save order. Please try again.' },
+      {
+        error: 'Failed to save order',
+        details: errorMessage,
+        stack: errorStack,
+        hasCredentials: !!process.env.GOOGLE_CREDENTIALS_BASE64,
+      },
       { status: 500 }
     );
   }
