@@ -31,30 +31,17 @@ export interface OrderData {
 async function getSheetsClient() {
   let auth;
 
-  // Check if running on Vercel with credentials
-  if (process.env.GOOGLE_CREDENTIALS_JSON) {
-    // Use JSON string credentials (production/Vercel)
-    try {
-      const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
-      auth = new google.auth.GoogleAuth({
-        credentials,
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-      });
-    } catch (parseError) {
-      throw new Error(`Failed to parse credentials: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
-    }
-  } else if (process.env.GOOGLE_CREDENTIALS_BASE64) {
-    // Fallback to base64 if that's what's set
-    try {
-      const decoded = Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64.trim(), 'base64').toString('utf-8');
-      const credentials = JSON.parse(decoded);
-      auth = new google.auth.GoogleAuth({
-        credentials,
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-      });
-    } catch (decodeError) {
-      throw new Error(`Failed to decode base64 credentials: ${decodeError instanceof Error ? decodeError.message : 'Unknown error'}`);
-    }
+  // Check if running on Vercel with separate credential fields
+  if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
+    // Use separate credential fields (production/Vercel) - most reliable method
+    auth = new google.auth.GoogleAuth({
+      credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY,
+        type: 'service_account',
+      },
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
   } else {
     // Use local credentials file (development)
     const credentialsPath = path.join(process.cwd(), 'lunar-spring-434604-b3-e05a554cbc11.json');
