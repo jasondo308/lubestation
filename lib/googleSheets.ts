@@ -31,14 +31,14 @@ export interface OrderData {
 async function getSheetsClient() {
   let auth;
 
-  // Check if running on Vercel or if environment variables are set
-  if (process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
-    // Use environment variables (production/Vercel)
+  // Check if running on Vercel with base64-encoded credentials
+  if (process.env.GOOGLE_CREDENTIALS_BASE64) {
+    // Decode base64 credentials (production/Vercel)
+    const credentials = JSON.parse(
+      Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64, 'base64').toString('utf-8')
+    );
     auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-      },
+      credentials,
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
   } else {
