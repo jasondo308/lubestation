@@ -195,7 +195,7 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
             <img
               src="/payment-qr.jpeg"
               alt="QR Code thanh toán"
-              className="w-48 h-48 object-contain rounded-lg border-2 border-blue-200 dark:border-blue-700"
+              className="w-64 h-64 object-contain rounded-lg border-2 border-blue-200 dark:border-blue-700"
             />
             <p className="text-xs text-center text-blue-900 dark:text-blue-200 font-medium">
               Quét mã QR để chuyển khoản
