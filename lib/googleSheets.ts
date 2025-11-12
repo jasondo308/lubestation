@@ -26,14 +26,29 @@ export interface OrderData {
 
 /**
  * Initialize Google Sheets API client
+ * Supports both local credentials file (development) and environment variables (production)
  */
 async function getSheetsClient() {
-  const credentialsPath = path.join(process.cwd(), 'lunar-spring-434604-b3-e05a554cbc11.json');
+  let auth;
 
-  const auth = new google.auth.GoogleAuth({
-    keyFile: credentialsPath,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-  });
+  // Check if running on Vercel or if environment variables are set
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
+    // Use environment variables (production/Vercel)
+    auth = new google.auth.GoogleAuth({
+      credentials: {
+        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      },
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+  } else {
+    // Use local credentials file (development)
+    const credentialsPath = path.join(process.cwd(), 'lunar-spring-434604-b3-e05a554cbc11.json');
+    auth = new google.auth.GoogleAuth({
+      keyFile: credentialsPath,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+  }
 
   const client = await auth.getClient();
   const sheets = google.sheets({ version: 'v4', auth: client as any });
