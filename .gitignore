@@ -28,6 +28,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# google credentials
+lunar-spring-434604-b3-e05a554cbc11.json
+
 # vercel
 .vercel
 
