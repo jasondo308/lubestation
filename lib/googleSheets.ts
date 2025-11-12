@@ -32,10 +32,12 @@ async function getSheetsClient() {
 
   // Check if environment variables are set (Vercel production)
   if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
+    // Ensure private key has proper newline characters
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
     credentials = {
       type: 'service_account',
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
+      private_key: privateKey,
     };
   } else {
     // Fallback to embedded credentials (works but less secure)
