@@ -129,7 +129,8 @@ export default function Home() {
       setTimeout(() => setShowSuccess(false), 5000);
     } catch (error) {
       console.error('Order submission error:', error);
-      alert('Đặt hàng thất bại. Vui lòng thử lại sau!');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Đặt hàng thất bại!\n\nChi tiết lỗi: ${errorMessage}`);
     }
   };
 
