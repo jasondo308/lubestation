@@ -1,7 +1,18 @@
 import { Resend } from 'resend';
 import { OrderData } from './googleSheets';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization of Resend client
+let resendClient: Resend | null = null;
+const getResendClient = () => {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY is not configured');
+    }
+    resendClient = new Resend(apiKey);
+  }
+  return resendClient;
+};
 
 // Format VND currency
 const formatVND = (amount: number) => {
@@ -115,6 +126,7 @@ export async function sendOrderConfirmationEmail(orderData: OrderData, orderId: 
     `;
 
     // Send to customer
+    const resend = getResendClient();
     const customerEmail = await resend.emails.send({
       from: 'LubeStation <onboarding@resend.dev>', // Use your verified domain once set up
       to: orderData.email,
@@ -195,6 +207,7 @@ export async function sendAdminNotificationEmail(orderData: OrderData, orderId: 
     `;
 
     // Send to admin (use your admin email)
+    const resend = getResendClient();
     const adminEmail = await resend.emails.send({
       from: 'LubeStation <onboarding@resend.dev>',
       to: 'atg.toan@gmail.com', // Admin email
