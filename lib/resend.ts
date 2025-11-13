@@ -122,9 +122,9 @@ export async function sendOrderConfirmationEmail(orderData: OrderData, orderId: 
       html: emailHtml,
     });
 
-    console.log('Customer email sent:', customerEmail.id);
+    console.log('Customer email sent:', customerEmail.data?.id);
 
-    return { success: true, emailId: customerEmail.id };
+    return { success: true, emailId: customerEmail.data?.id };
   } catch (error) {
     console.error('Error sending order confirmation email:', error);
     throw error;
@@ -202,9 +202,9 @@ export async function sendAdminNotificationEmail(orderData: OrderData, orderId: 
       html: adminEmailHtml,
     });
 
-    console.log('Admin notification email sent:', adminEmail.id);
+    console.log('Admin notification email sent:', adminEmail.data?.id);
 
-    return { success: true, emailId: adminEmail.id };
+    return { success: true, emailId: adminEmail.data?.id };
   } catch (error) {
     console.error('Error sending admin notification email:', error);
     throw error;

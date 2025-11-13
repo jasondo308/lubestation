@@ -18,10 +18,26 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
     address: '',
     notes: ''
   });
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmOrder = () => {
+    if (!paymentConfirmed) {
+      alert('Vui lòng xác nhận đã thanh toán để tiếp tục');
+      return;
+    }
+    setShowConfirmDialog(false);
     onSubmit(formData);
+  };
+
+  const handleCloseDialog = () => {
+    setShowConfirmDialog(false);
+    setPaymentConfirmed(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -252,6 +268,114 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
           Bằng cách đặt hàng, bạn đồng ý để chúng tôi liên hệ xác nhận đơn hàng.
         </p>
       </form>
+
+      {/* Confirmation Dialog */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 space-y-6">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
+                Xác Nhận Thanh Toán
+              </h3>
+
+              {/* QR Code */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6">
+                <div className="flex flex-col items-center space-y-4">
+                  <img
+                    src="/payment-qr.jpeg"
+                    alt="QR Code thanh toán"
+                    className="w-72 h-72 object-contain rounded-lg border-2 border-blue-300 dark:border-blue-600"
+                  />
+                  <p className="text-sm font-semibold text-blue-900 dark:text-blue-200 text-center">
+                    Quét mã QR để chuyển khoản
+                  </p>
+                </div>
+
+                {/* Bank Details */}
+                <div className="mt-4 bg-white dark:bg-gray-900 p-4 rounded-lg space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Ngân hàng:</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">Vietcombank HCM</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Số tài khoản:</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100 font-mono">0421000408696</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Chủ tài khoản:</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">DO CONG TOAN</span>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-gray-600 dark:text-gray-400">Nội dung chuyển khoản:</p>
+                    <p className="font-bold text-blue-600 dark:text-blue-400 mt-1 text-base">
+                      {formData.fullName} {formData.phone}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Important Notice */}
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 rounded-r-xl p-4 space-y-2">
+                <p className="text-yellow-800 dark:text-yellow-200 font-semibold">
+                  ⚠️ Lưu ý quan trọng:
+                </p>
+                <ul className="text-sm text-yellow-800 dark:text-yellow-200 space-y-1 ml-4 list-disc">
+                  <li>Vui lòng chuyển khoản để xác nhận đơn đặt hàng trước của bạn</li>
+                  <li>Đơn hàng dự kiến nhận trong vòng 2 tuần, khoảng 30/11/2025</li>
+                  <li>Chúng tôi sẽ liên hệ xác nhận sau khi nhận được thanh toán</li>
+                </ul>
+              </div>
+
+              {/* Contact Support */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded-r-xl p-4">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <span className="font-semibold">Cần hỗ trợ?</span> Liên hệ chúng tôi tại:{' '}
+                  <a
+                    href="https://www.facebook.com/TheGioiRubik/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold underline hover:text-blue-600 dark:hover:text-blue-300"
+                  >
+                    Facebook TheGioiRubik
+                  </a>
+                </p>
+              </div>
+
+              {/* Confirmation Checkbox */}
+              <div className="flex items-start space-x-3 bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
+                <input
+                  type="checkbox"
+                  id="paymentConfirm"
+                  checked={paymentConfirmed}
+                  onChange={(e) => setPaymentConfirmed(e.target.checked)}
+                  className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label htmlFor="paymentConfirm" className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                  Tôi xác nhận thông tin đơn hàng chính xác và đã thực hiện thanh toán
+                </label>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleCloseDialog}
+                  className="flex-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmOrder}
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg"
+                >
+                  Xác Nhận Đơn Hàng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

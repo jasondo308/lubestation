@@ -34,7 +34,9 @@
       "Bash(git config:*)",
       "Bash(ssh -T:*)",
       "Bash(git remote set-url:*)",
-      "Bash(ssh-add:*)"
+      "Bash(ssh-add:*)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)"
     ],
     "deny": [],
     "ask": []
