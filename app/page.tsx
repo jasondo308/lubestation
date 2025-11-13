@@ -10,6 +10,7 @@ import { CartItem, PreOrderFormData, ProductVariant } from '@/lib/types';
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({}); // variantId -> quantity
   const [showSuccess, setShowSuccess] = useState(false);
+  const [successOrderId, setSuccessOrderId] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'cubicle'>('cubicle');
   const [activeSubCategory, setActiveSubCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -115,15 +116,24 @@ export default function Home() {
         throw new Error(error.details || 'Failed to submit order');
       }
 
-      // Show success message
+      const result = await response.json();
+
+      // Show success message with order ID
+      setSuccessOrderId(result.orderId);
       setShowSuccess(true);
 
       // Reset cart and city
       setCart({});
       setSelectedCity('');
 
-      // Hide success message after 5 seconds
-      setTimeout(() => setShowSuccess(false), 5000);
+      // Scroll to top to show success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Hide success message after 10 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+        setSuccessOrderId('');
+      }, 10000);
     } catch (error) {
       console.error('Order submission error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -150,16 +160,38 @@ export default function Home() {
       {/* Success Message */}
       {showSuccess && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-          <div className="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 rounded-r-lg p-5 shadow-md">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">✓</span>
-              <div>
-                <p className="font-bold text-green-800 dark:text-green-200 text-lg">
-                  Đặt hàng thành công!
+          <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-500 rounded-xl p-6 shadow-xl">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <span className="text-3xl text-white">✓</span>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-green-800 dark:text-green-200 text-2xl mb-2">
+                  🎉 Đặt Hàng Thành Công!
+                </h3>
+                <p className="text-green-700 dark:text-green-300 mb-3">
+                  <strong>Mã đơn hàng:</strong> <span className="font-mono bg-green-100 dark:bg-green-800 px-2 py-1 rounded">{successOrderId}</span>
                 </p>
-                <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                  Chúng tôi sẽ liên hệ với bạn sớm để xác nhận đơn hàng.
-                </p>
+                <div className="space-y-2 text-sm text-green-700 dark:text-green-300">
+                  <p className="flex items-start gap-2">
+                    <span className="flex-shrink-0">📧</span>
+                    <span>Email xác nhận đã được gửi đến <strong>hộp thư của bạn</strong></span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="flex-shrink-0">📬</span>
+                    <span>Chúng tôi cũng đã nhận được thông báo đơn hàng của bạn</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="flex-shrink-0">📞</span>
+                    <span>Chúng tôi sẽ liên hệ với bạn sớm để xác nhận đơn hàng</span>
+                  </p>
+                  <p className="flex items-start gap-2 mt-3 pt-3 border-t border-green-300 dark:border-green-700">
+                    <span className="flex-shrink-0">📅</span>
+                    <span><strong>Đóng đơn:</strong> 19/11/2025 | <strong>Dự kiến giao:</strong> 30/11/2025</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
