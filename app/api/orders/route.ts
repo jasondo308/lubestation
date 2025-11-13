@@ -1,37 +1,54 @@
 import { NextResponse } from 'next/server';
-import { addOrderToSheet, initializeSheet, type OrderData } from '@/lib/googleSheets';
 import { sendOrderConfirmationEmail, sendAdminNotificationEmail } from '@/lib/resend';
+
+interface OrderItem {
+  productName: string;
+  size: string;
+  quantity: number;
+  price: number;
+}
+
+interface OrderData {
+  full_name: string;
+  email: string;
+  phone: string;
+  city: string;
+  address: string;
+  notes?: string;
+  items: OrderItem[];
+  subtotal: number;
+  discount: number;
+  shipping: number;
+  total: number;
+}
 
 export async function POST(request: Request) {
   try {
     const orderData: OrderData = await request.json();
 
-    // Initialize sheet with headers if needed (first time only)
-    await initializeSheet();
-
-    // Add order to Google Sheets
-    const result = await addOrderToSheet(orderData);
+    // Generate order ID
+    const orderId = `ORD-${Date.now()}`;
 
     // Send confirmation email to customer
     try {
-      await sendOrderConfirmationEmail(orderData, result.orderId);
+      await sendOrderConfirmationEmail(orderData, orderId);
     } catch (emailError) {
-      console.error('Failed to send customer email, but order was saved:', emailError);
-      // Don't fail the request if email fails
+      console.error('Failed to send customer email:', emailError);
+      // Continue even if customer email fails
     }
 
     // Send notification email to admin
     try {
-      await sendAdminNotificationEmail(orderData, result.orderId);
+      await sendAdminNotificationEmail(orderData, orderId);
     } catch (emailError) {
-      console.error('Failed to send admin email, but order was saved:', emailError);
-      // Don't fail the request if email fails
+      console.error('Failed to send admin email:', emailError);
+      // Continue even if admin email fails
     }
 
     return NextResponse.json(
       {
         success: true,
-        orderId: result.orderId,
+        orderId: orderId,
         message: 'Order successfully placed! Check your email for confirmation.'
       },
       { status: 201 }
@@ -45,10 +62,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
-        error: 'Failed to save order',
+        error: 'Failed to process order',
         details: errorMessage,
         stack: errorStack,
-        hasCredentials: !!process.env.GOOGLE_CREDENTIALS_BASE64,
       },
       { status: 500 }
     );
