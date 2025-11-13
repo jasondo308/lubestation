@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { addOrderToSheet, initializeSheet, type OrderData } from '@/lib/googleSheets';
+import { sendOrderConfirmationEmail, sendAdminNotificationEmail } from '@/lib/resend';
 
 export async function POST(request: Request) {
   try {
@@ -11,11 +12,27 @@ export async function POST(request: Request) {
     // Add order to Google Sheets
     const result = await addOrderToSheet(orderData);
 
+    // Send confirmation email to customer
+    try {
+      await sendOrderConfirmationEmail(orderData, result.orderId);
+    } catch (emailError) {
+      console.error('Failed to send customer email, but order was saved:', emailError);
+      // Don't fail the request if email fails
+    }
+
+    // Send notification email to admin
+    try {
+      await sendAdminNotificationEmail(orderData, result.orderId);
+    } catch (emailError) {
+      console.error('Failed to send admin email, but order was saved:', emailError);
+      // Don't fail the request if email fails
+    }
+
     return NextResponse.json(
       {
         success: true,
         orderId: result.orderId,
-        message: 'Order successfully added to Google Sheets'
+        message: 'Order successfully placed! Check your email for confirmation.'
       },
       { status: 201 }
     );

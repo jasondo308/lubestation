@@ -10,7 +10,7 @@ import { CartItem, PreOrderFormData, ProductVariant } from '@/lib/types';
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({}); // variantId -> quantity
   const [showSuccess, setShowSuccess] = useState(false);
-  const [activeTab, setActiveTab] = useState<'all' | 'cubicle' | 'scs'>('all');
+  const [activeTab, setActiveTab] = useState<'cubicle'>('cubicle');
   const [activeSubCategory, setActiveSubCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState<string>('');
@@ -23,16 +23,15 @@ export default function Home() {
   };
 
   // Reset sub-category when changing brand tab
-  const handleTabChange = (tab: 'all' | 'cubicle' | 'scs') => {
+  const handleTabChange = (tab: 'cubicle') => {
     setActiveTab(tab);
     setActiveSubCategory('All');
   };
 
   // Filter products based on active tab, sub-category, and search
   const filteredProducts = products.filter(product => {
-    // Brand filter
-    if (activeTab === 'cubicle' && product.category !== 'TheCubicle') return false;
-    if (activeTab === 'scs' && product.category !== 'SpeedCubeShop') return false;
+    // Only show TheCubicle products
+    if (product.category !== 'TheCubicle') return false;
 
     // Sub-category filter
     if (activeSubCategory !== 'All') {
@@ -50,10 +49,8 @@ export default function Home() {
     return true;
   });
 
-  // Get current sub-categories based on active tab
-  const currentSubCategories = activeTab === 'all' ? [] :
-    activeTab === 'cubicle' ? subCategories.TheCubicle :
-    subCategories.SpeedCubeShop;
+  // Get current sub-categories (only TheCubicle)
+  const currentSubCategories = subCategories.TheCubicle;
 
   // Build cart items by finding variants across all products
   const cartItems: CartItem[] = Object.entries(cart)
@@ -176,7 +173,7 @@ export default function Home() {
             Chọn Sản Phẩm
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg">
-            Lựa chọn dầu bôi trơn cube cao cấp từ TheCubicle và SpeedCubeShop
+            Lựa chọn dầu bôi trơn cube cao cấp từ TheCubicle
           </p>
 
           {/* Search Bar */}
@@ -196,42 +193,6 @@ export default function Home() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-          </div>
-        </div>
-
-        {/* Brand Tabs */}
-        <div className="mb-6">
-          <div className="flex gap-3 border-b-2 border-gray-100 dark:border-gray-700">
-            <button
-              onClick={() => handleTabChange('all')}
-              className={`px-8 py-4 font-bold transition-all border-b-3 text-base ${
-                activeTab === 'all'
-                  ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-              }`}
-            >
-              Tất Cả
-            </button>
-            <button
-              onClick={() => handleTabChange('cubicle')}
-              className={`px-8 py-4 font-bold transition-all border-b-3 text-base ${
-                activeTab === 'cubicle'
-                  ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-              }`}
-            >
-              TheCubicle
-            </button>
-            <button
-              onClick={() => handleTabChange('scs')}
-              className={`px-8 py-4 font-bold transition-all border-b-3 text-base ${
-                activeTab === 'scs'
-                  ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-              }`}
-            >
-              SpeedCubeShop
-            </button>
           </div>
         </div>
 

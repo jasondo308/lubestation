@@ -21,9 +21,23 @@
       "Bash(git push:*)",
       "Bash(gh auth:*)",
       "Bash(gh repo set-default:*)",
-      "Bash(public/.gitkeep)"
+      "Bash(public/.gitkeep)",
+      "Bash(env)",
+      "Bash(cat:*)",
+      "WebFetch(domain:sveqkpbeuznknpxivxpq.supabase.co)",
+      "Bash(npm uninstall:*)",
+      "Bash(gh repo view:*)",
+      "WebFetch(domain:lubestation.vercel.app)",
+      "Bash(curl:*)",
+      "Bash(gh:*)",
+      "Bash(sudo chown:*)",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
 }
