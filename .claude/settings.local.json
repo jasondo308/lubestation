@@ -32,7 +32,9 @@
       "Bash(gh:*)",
       "Bash(sudo chown:*)",
       "Bash(git config:*)",
-      "Bash(ssh -T:*)"
+      "Bash(ssh -T:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(ssh-add:*)"
     ],
     "deny": [],
     "ask": []
