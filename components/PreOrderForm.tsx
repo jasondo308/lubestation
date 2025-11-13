@@ -247,12 +247,18 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
             </div>
           </div>
 
-          <div className="pt-2 border-t border-blue-200 dark:border-blue-800">
+          <div className="pt-2 border-t border-blue-200 dark:border-blue-800 space-y-1">
             <p className="text-xs text-blue-700 dark:text-blue-400">
               <span className="font-semibold">📦 Phí vận chuyển:</span>
               {formData.city === 'Hồ Chí Minh' ? ' 35,000 ₫ (HCM)' :
                formData.city ? ' 40,000 ₫ (Tỉnh khác)' :
                ' 35,000 ₫ (HCM) / 40,000 ₫ (Tỉnh khác)'}
+            </p>
+            <p className="text-xs text-blue-700 dark:text-blue-400">
+              <span className="font-semibold">🗓️ Đóng đơn hàng:</span> 19/11/2025
+            </p>
+            <p className="text-xs text-blue-700 dark:text-blue-400">
+              <span className="font-semibold">📅 Dự kiến giao hàng:</span> 30/11/2025
             </p>
           </div>
         </div>
@@ -321,7 +327,8 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
                 </p>
                 <ul className="text-sm text-yellow-800 dark:text-yellow-200 space-y-1 ml-4 list-disc">
                   <li>Vui lòng chuyển khoản để xác nhận đơn đặt hàng trước của bạn</li>
-                  <li>Đơn hàng dự kiến nhận trong vòng 2 tuần, khoảng 30/11/2025</li>
+                  <li><strong>Đóng đơn hàng:</strong> 19/11/2025</li>
+                  <li><strong>Dự kiến giao hàng:</strong> 30/11/2025</li>
                   <li>Chúng tôi sẽ liên hệ xác nhận sau khi nhận được thanh toán</li>
                 </ul>
               </div>

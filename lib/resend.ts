@@ -112,7 +112,11 @@ export async function sendOrderConfirmationEmail(orderData: OrderData, orderId: 
               </div>
 
               <p style="margin-top: 30px; padding: 15px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
-                <strong>Lưu ý:</strong> Đây là đơn đặt hàng trước. Chúng tôi sẽ liên hệ với bạn để xác nhận và thông báo thời gian giao hàng dự kiến.
+                <strong>Lưu ý quan trọng:</strong><br>
+                • Đây là đơn đặt hàng trước<br>
+                • Đóng đơn hàng: <strong>19/11/2025</strong><br>
+                • Dự kiến giao hàng: <strong>30/11/2025</strong><br>
+                • Chúng tôi sẽ liên hệ xác nhận sau khi nhận được thanh toán
               </p>
             </div>
 
