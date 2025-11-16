@@ -118,22 +118,13 @@ export default function Home() {
 
       const result = await response.json();
 
-      // Show success message with order ID
+      // Show success modal with order ID
       setSuccessOrderId(result.orderId);
       setShowSuccess(true);
 
       // Reset cart and city
       setCart({});
       setSelectedCity('');
-
-      // Scroll to top to show success message
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Hide success message after 10 seconds
-      setTimeout(() => {
-        setShowSuccess(false);
-        setSuccessOrderId('');
-      }, 10000);
     } catch (error) {
       console.error('Order submission error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -157,13 +148,13 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Success Message - Apple Style */}
+      {/* Success Modal - Apple Style */}
       {showSuccess && (
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8">
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
             <div className="text-center">
-              <div className="w-16 h-16 bg-black dark:bg-white rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-10 h-10 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-20 h-20 bg-black dark:bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-12 h-12 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
@@ -173,13 +164,23 @@ export default function Home() {
               <p className="text-gray-600 dark:text-gray-400 mb-6">
                 Mã đơn hàng: <span className="font-mono font-semibold text-gray-900 dark:text-white">{successOrderId}</span>
               </p>
-              <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-6">
+              <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-6 mb-6">
                 <p>Email xác nhận đã được gửi đến hộp thư của bạn</p>
                 <p>Chúng tôi sẽ liên hệ với bạn sớm để xác nhận đơn hàng</p>
                 <p className="text-gray-900 dark:text-white font-medium pt-3">
                   Đóng đơn: 19/11/2025 | Dự kiến giao: 30/11/2025
                 </p>
               </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSuccess(false);
+                  setSuccessOrderId('');
+                }}
+                className="w-full bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-100 text-white dark:text-gray-900 font-medium py-3 px-6 rounded-lg transition-all"
+              >
+                Đóng
+              </button>
             </div>
           </div>
         </div>
