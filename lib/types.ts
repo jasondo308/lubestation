@@ -17,6 +17,7 @@ export interface Product {
   description: string;
   category: string;
   variants: ProductVariant[];
+  imageUrl?: string;
 }
 
 export interface CartItem {

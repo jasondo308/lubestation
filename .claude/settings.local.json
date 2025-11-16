@@ -36,7 +36,11 @@
       "Bash(git remote set-url:*)",
       "Bash(ssh-add:*)",
       "Bash(lsof:*)",
-      "Bash(kill:*)"
+      "Bash(kill:*)",
+      "WebSearch",
+      "WebFetch(domain:www.thecubicle.com)",
+      "Bash(node:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []

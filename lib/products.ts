@@ -1,6 +1,7 @@
 import { Product, ProductVariant } from './types';
 import pricelistData from '../stockprice/stock-pricelist.json';
 import detailedDescriptions from '../stockprice/product-descriptions.json';
+import productImages from '../stockprice/product-images.json';
 
 // Raw products from both categories
 const rawCubicleProducts = pricelistData.categories.cubicle.products.map(p => ({
@@ -24,11 +25,15 @@ allRawProducts.forEach(product => {
   const key = `${product.category}|${product.productName}`;
 
   if (!groupedProducts.has(key)) {
+    // Look up image URL from product-images.json
+    const imageUrl = (productImages.productImages as any)[product.productName];
+
     groupedProducts.set(key, {
       productName: product.productName,
       description: product.description || '',
       category: product.category,
-      variants: []
+      variants: [],
+      imageUrl: imageUrl
     });
   }
 

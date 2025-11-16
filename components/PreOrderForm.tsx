@@ -73,8 +73,8 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
 
   if (items.length === 0) {
     return (
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 rounded-r-xl p-6 text-center shadow-md">
-        <p className="text-yellow-800 dark:text-yellow-200 font-medium">
+      <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center">
+        <p className="text-gray-600 dark:text-gray-400 font-medium">
           Vui lòng thêm sản phẩm vào giỏ hàng trước khi đặt hàng.
         </p>
       </div>
@@ -82,8 +82,8 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700">
+      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-8">
         Thông Tin Đặt Hàng
       </h2>
 
@@ -265,7 +265,7 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
 
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-blue-200 dark:shadow-blue-900/50"
+          className="w-full bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-100 text-white dark:text-gray-900 font-semibold py-4 px-6 rounded-lg transition-all"
         >
           Đặt Hàng Ngay
         </button>
@@ -374,7 +374,7 @@ export default function PreOrderForm({ items, onSubmit, onCityChange }: PreOrder
                 <button
                   type="button"
                   onClick={handleConfirmOrder}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg"
+                  className="flex-1 px-6 py-3 bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-100 text-white dark:text-gray-900 font-semibold rounded-lg transition-all"
                 >
                   Xác Nhận Đơn Hàng
                 </button>

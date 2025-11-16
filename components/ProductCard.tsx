@@ -22,34 +22,41 @@ export default function ProductCard({ product, quantities, onQuantityChange }: P
   const currentQuantity = quantities[selectedVariant.id] || 0;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
-      <div className="p-6">
-        <div className="mb-3">
-          <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider px-3 py-1 bg-blue-50 dark:bg-blue-900/30 rounded-full">
-            {product.category}
-          </span>
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200">
+      {/* Product Image - Apple Style */}
+      {product.imageUrl && (
+        <div className="h-48 bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-8">
+          <img
+            src={product.imageUrl}
+            alt={product.productName}
+            className="max-h-full max-w-full object-contain"
+          />
         </div>
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">
+      )}
+
+      <div className="p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 leading-tight">
           {product.productName}
         </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 font-mono">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
           {selectedVariant.productCode}
         </p>
 
-        {/* Size Selector - Visual Boxes */}
-        <div className="mb-5">
-          <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
-            Dung Tích
+        {/* Size Selector - Apple Style */}
+        <div className="mb-6">
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-3">
+            Dung tích
           </label>
-          <div className="flex flex-wrap gap-2.5">
+          <div className="flex flex-wrap gap-2">
             {product.variants.map(variant => (
               <button
                 key={variant.id}
+                type="button"
                 onClick={() => setSelectedVariant(variant)}
-                className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all transform hover:scale-105 ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   selectedVariant.id === variant.id
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900/50'
-                    : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border-2 border-gray-200 dark:border-gray-600'
+                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'
                 }`}
               >
                 {variant.size}
@@ -58,59 +65,64 @@ export default function ProductCard({ product, quantities, onQuantityChange }: P
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-4">
-          <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
+        <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+          <span className="text-xl font-semibold text-gray-900 dark:text-white">
             {formatVND(selectedVariant.price)} ₫
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={() => onQuantityChange(selectedVariant.id, Math.max(0, currentQuantity - 1))}
-              className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center justify-center font-bold disabled:opacity-50"
+              className="w-9 h-9 rounded-full border border-gray-300 dark:border-gray-600 hover:border-gray-900 dark:hover:border-white flex items-center justify-center text-gray-700 dark:text-gray-300 font-medium disabled:opacity-30 disabled:hover:border-gray-300 transition-all"
               disabled={currentQuantity === 0}
             >
-              -
+              −
             </button>
-            <span className="w-8 text-center font-semibold">{currentQuantity}</span>
+            <span className="w-8 text-center font-medium text-gray-900 dark:text-white">{currentQuantity}</span>
             <button
+              type="button"
               onClick={() => onQuantityChange(selectedVariant.id, currentQuantity + 1)}
-              className="w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center font-bold"
+              className="w-9 h-9 rounded-full bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-100 text-white dark:text-gray-900 flex items-center justify-center font-medium transition-all"
             >
               +
             </button>
           </div>
         </div>
 
-        {/* Detailed Description Section */}
+        {/* Detailed Description Section - Apple Style */}
         {selectedVariant.detailedDescription && (
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
+              type="button"
               onClick={() => setShowDescription(!showDescription)}
-              className="flex items-center justify-between w-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              className="flex items-center justify-between w-full text-sm font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
-              <span>{language === 'vn' ? 'Chi tiết sản phẩm' : 'Product Details'}</span>
-              <span className="text-xl">{showDescription ? '−' : '+'}</span>
+              <span>Chi tiết sản phẩm</span>
+              <span className="text-lg">{showDescription ? '−' : '+'}</span>
             </button>
 
             {showDescription && (
-              <div className="mt-3 space-y-2">
-                {/* Language Toggle */}
-                <div className="flex gap-2">
+              <div className="mt-4 space-y-3">
+                {/* Language Toggle - Apple Style */}
+                <div className="inline-flex gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
                   <button
+                    type="button"
                     onClick={() => setLanguage('vn')}
-                    className={`px-3 py-1 text-xs rounded-full ${
+                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                       language === 'vn'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-600 dark:text-gray-400'
                     }`}
                   >
                     Tiếng Việt
                   </button>
                   <button
+                    type="button"
                     onClick={() => setLanguage('en')}
-                    className={`px-3 py-1 text-xs rounded-full ${
+                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                       language === 'en'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-600 dark:text-gray-400'
                     }`}
                   >
                     English
@@ -118,7 +130,7 @@ export default function ProductCard({ product, quantities, onQuantityChange }: P
                 </div>
 
                 {/* Description Text */}
-                <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                   {language === 'vn'
                     ? selectedVariant.detailedDescription.vn
                     : selectedVariant.detailedDescription.en}
