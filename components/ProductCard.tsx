@@ -35,12 +35,9 @@ export default function ProductCard({ product, quantities, onQuantityChange }: P
       )}
 
       <div className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 leading-tight">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 leading-tight">
           {product.productName}
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-          {selectedVariant.productCode}
-        </p>
 
         {/* Size Selector - Apple Style */}
         <div className="mb-6">
